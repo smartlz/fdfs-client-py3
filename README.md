@@ -49,4 +49,4 @@ res = client.upload_by_filename(file.read())
 
 ### 3. Author
 
-the author is smarli，if you has some quesion，you can contact us by email to smartli_it@163.com。
+the author is smarli，if you has some question，you can contact us by email to smartli_it@163.com。
