@@ -617,3 +617,30 @@ class Fdfs_client(object):
         store_serv = tc.tracker_query_storage_update(group_name, appender_filename)
         store = Storage_client(store_serv.ip_addr, store_serv.port, self.timeout)
         return store.storage_modify_by_buffer(tc, store_serv, filebuffer, file_offset, filesize, appender_filename)
+
+    def upload_filename_to_group(self, filename, group, meta_dict=None):
+        """
+        Upload file to a specific group
+        arguments:
+        @filename: string, filename, absolute path
+        @group: str or byte
+        @meta_dict: dict
+        @return: dictionary
+        {
+        'Group name': 'XXX',
+        'Remote file_id': 'XXXX',
+        'Status': 'Upload successed.',
+        'Local file name': 'XXXXX',
+        'Uploaded size': 'XXXXKB',
+        'Storage IP': 'XXXX'
+        }
+        """
+        isfile, errmsg = fdfs_check_file(filename)
+        if not isfile:
+            raise DataError(errmsg + '(uploading)')
+        tc = Tracker_client(self.tracker_pool)
+        if isinstance(group, str):
+            group = group.encode()
+        store_serv = tc.tracker_query_storage_stor_with_group(group)
+        store = Storage_client(store_serv.ip_addr, store_serv.port, self.timeout)
+        return store.storage_upload_by_filename(tc, store_serv, filename, meta_dict)
